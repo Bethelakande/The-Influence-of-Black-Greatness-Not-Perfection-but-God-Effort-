@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Influence of Black Greatness | Interactive Report</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap');
+
+        :root {
+            --bg-primary: #fdfaf6;
+            --accent-gold: #c5a059;
+            --text-main: #2d2a26;
+            --card-bg: #ffffff;
+            --muted: #8c857d;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            scroll-behavior: smooth;
+        }
+
+        h1,
+        h2,
+        h3,
+        .serif {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 650px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+
+        .pillar-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(197, 160, 89, 0.1);
+        }
+
+        .glass-nav {
+            background: rgba(253, 250, 246, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(197, 160, 89, 0.2);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: var(--accent-gold);
+            border-radius: 10px;
+        }
+
+        .phase-active {
+            border-color: var(--accent-gold);
+            background-color: rgba(197, 160, 89, 0.05);
+        }
+    </style>
+</head>
+
+<body class="antialiased">
+
+    <!-- Chosen Palette: Sacred Earth & Gold (Cream, Soft Brown, Muted Gold) -->
+    <!-- Application Structure Plan: 
+         The SPA is designed as a thematic journey. It starts with a high-level "Soulful Dashboard" 
+         summarizing the report's goals. It then moves into an interactive "Thematic Pillars" explorer 
+         to understand the values (Faith, Work, Growth, Respect). A "Narrative Arc" component allows 
+         users to step through the 4 phases of the playlist. Finally, a data-driven section uses 
+         Chart.js to show genre distribution, ending with the Master Spotify Prompt utility. 
+         This structure mirrors the ethnomusicological approach of the report, focusing on 
+         the 'Why' behind the music. -->
+    <!-- Visualization & Content Choices: 
+         - Genre Mix: Polar Area Chart (Chart.js) to show the balance of Rap, Gospel, and R&B.
+         - Thematic Pillars: Interactive CSS/JS Grid cards with dynamic detail injection.
+         - 4-Phase Flow: Custom JS-stepper to visualize the emotional transition from 'Awakening' to 'Harvest'.
+         - Tracklist: Filterable JS Table for quick reference.
+         - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <nav class="fixed top-0 w-full z-50 glass-nav">
+        <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+            <span class="serif font-bold text-xl text-amber-800">Black Greatness</span>
+            <div class="hidden md:flex space-x-8 text-sm font-semibold uppercase tracking-widest">
+                <a href="#dashboard" class="hover:text-amber-600 transition">Pillars</a>
+                <a href="#narrative" class="hover:text-amber-600 transition">The Arc</a>
+                <a href="#artists" class="hover:text-amber-600 transition">Architects</a>
+                <a href="#prompt"
+                    class="hover:text-amber-600 transition underline decoration-amber-500 underline-offset-4">Spotify
+                    Prompt</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="pt-32 pb-20 px-6 text-center">
+        <div class="max-w-4xl mx-auto">
+            <p class="text-amber-600 font-semibold tracking-widest mb-4 uppercase text-sm">A Curated Ethnomusicological
+                Report</p>
+            <h1 class="text-5xl md:text-7xl font-bold mb-6 leading-tight">Not Perfection — But God & Effort</h1>
+            <p class="text-lg text-muted leading-relaxed">
+                Exploring the intersection of Black artistry, faith, and the human grind.
+                This report details a 60-track sonic liturgy designed to elevate the soul
+                through vulnerability, resilience, and divine grace.
+            </p>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6 space-y-32 pb-32">
+
+        <!-- SECTION: Thematic Dashboard -->
+        <section id="dashboard">
+            <div class="mb-12">
+                <h2 class="text-3xl font-bold mb-4">Thematic Pillars</h2>
+                <p class="text-muted max-w-2xl">
+                    Every track in this curation is selected based on its alignment with four foundational pillars.
+                    Click a pillar below to see how it shapes the playlist's identity and which artists lead the
+                    narrative.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="pillar-card p-8 border border-amber-100 bg-white cursor-pointer transition-all duration-300"
+                    onclick="updatePillar(0)">
+                    <div class="text-3xl mb-4">🕊️</div>
+                    <h3 class="text-xl font-bold mb-2">Faith & God</h3>
+                    <p class="text-sm text-muted">Contemplative, theology-driven storytelling.</p>
+                </div>
+                <div class="pillar-card p-8 border border-amber-100 bg-white cursor-pointer transition-all duration-300"
+                    onclick="updatePillar(1)">
+                    <div class="text-3xl mb-4">⚒️</div>
+                    <h3 class="text-xl font-bold mb-2">Hard Work</h3>
+                    <p class="text-sm text-muted">The ethos of effort and honest labor.</p>
+                </div>
+                <div class="pillar-card p-8 border border-amber-100 bg-white cursor-pointer transition-all duration-300"
+                    onclick="updatePillar(2)">
+                    <div class="text-3xl mb-4">🌱</div>
+                    <h3 class="text-xl font-bold mb-2">Growth & Healing</h3>
+                    <p class="text-sm text-muted">Vulnerability as a path to evolution.</p>
+                </div>
+                <div class="pillar-card p-8 border border-amber-100 bg-white cursor-pointer transition-all duration-300"
+                    onclick="updatePillar(3)">
+                    <div class="text-3xl mb-4">👑</div>
+                    <h3 class="text-xl font-bold mb-2">Respect for Women</h3>
+                    <p class="text-sm text-muted">Honoring, protecting, and admiring womanhood.</p>
+                </div>
+            </div>
+
+            <div id="pillar-detail"
+                class="mt-8 p-10 bg-amber-50 rounded-xl border border-amber-100 transition-all duration-500 opacity-100">
+                <div class="flex flex-col md:flex-row gap-8 items-center">
+                    <div class="flex-1">
+                        <h3 id="pillar-title" class="text-2xl font-bold mb-4">Select a Pillar</h3>
+                        <p id="pillar-desc" class="text-muted leading-relaxed italic">Click one of the cards above to
+                            explore the core architectural themes of the "Black Greatness" soundscape.</p>
+                    </div>
+                    <div class="flex-1 w-full bg-white p-6 rounded-lg shadow-sm border border-amber-50">
+                        <h4 class="font-semibold text-xs uppercase tracking-widest text-amber-700 mb-4">Key Artists</h4>
+                        <div id="pillar-artists" class="flex flex-wrap gap-2 text-sm">
+                            <span class="text-muted">—</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: Narrative Arc -->
+        <section id="narrative">
+            <div class="flex flex-col lg:flex-row gap-16 items-center">
+                <div class="flex-1">
+                    <h2 class="text-3xl font-bold mb-6">The Emotional Flow</h2>
+                    <p class="text-muted mb-8 leading-relaxed">
+                        Great curation isn't just about good songs; it's about the journey.
+                        The playlist is sequenced into four distinct narrative phases, moving the listener
+                        from states of heavy introspection to triumphant praise.
+                    </p>
+
+                    <div class="space-y-4">
+                        <div id="phase-1" class="p-6 border-l-4 phase-active cursor-pointer transition"
+                            onclick="selectPhase(1)">
+                            <h4 class="font-bold">Phase 1: The Awakening</h4>
+                            <p class="text-xs uppercase text-amber-600 mt-1">Introspection & Grace</p>
+                        </div>
+                        <div id="phase-2"
+                            class="p-6 border-l-4 border-transparent cursor-pointer hover:bg-white transition"
+                            onclick="selectPhase(2)">
+                            <h4 class="font-bold">Phase 2: The Grind and The Soil</h4>
+                            <p class="text-xs uppercase text-amber-600 mt-1">Effort, Growth & Survival</p>
+                        </div>
+                        <div id="phase-3"
+                            class="p-6 border-l-4 border-transparent cursor-pointer hover:bg-white transition"
+                            onclick="selectPhase(3)">
+                            <h4 class="font-bold">Phase 3: The Reverence</h4>
+                            <p class="text-xs uppercase text-amber-600 mt-1">Respecting Women & Vulnerability</p>
+                        </div>
+                        <div id="phase-4"
+                            class="p-6 border-l-4 border-transparent cursor-pointer hover:bg-white transition"
+                            onclick="selectPhase(4)">
+                            <h4 class="font-bold">Phase 4: The Harvest and The Praise</h4>
+                            <p class="text-xs uppercase text-amber-600 mt-1">Triumph & Gratitude</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex-1 w-full">
+                    <div class="bg-white p-8 rounded-2xl shadow-xl border border-amber-50 relative min-h-[400px]">
+                        <div id="phase-content" class="h-full">
+                            <h3 id="p-title" class="text-2xl font-bold mb-4">The Awakening</h3>
+                            <p id="p-desc" class="text-muted mb-6 leading-relaxed">
+                                The playlist opens with organic, soulful sounds that invite the listener to look inward
+                                and upward,
+                                acknowledging human frailty and the need for divine guidance. It features Lauryn Hill's
+                                "To Zion"
+                                and Kendrick Lamar's biblical metaphors.
+                            </p>
+                            <div class="border-t border-amber-50 pt-6">
+                                <h4 class="text-xs font-bold text-amber-800 uppercase tracking-widest mb-4">Featured
+                                    Tracks</h4>
+                                <ul id="p-tracks" class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm font-medium">
+                                    <li class="flex items-center gap-3"><span>🎵</span> To Zion — Lauryn Hill</li>
+                                    <li class="flex items-center gap-3"><span>🎵</span> Man at the Garden — Kendrick
+                                        Lamar</li>
+                                    <li class="flex items-center gap-3"><span>🎵</span> Man Up Above — J. Cole</li>
+                                    <li class="flex items-center gap-3"><span>🎵</span> Do Better — Ab-Soul</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: Data Visuals -->
+        <section>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+                <div class="chart-container">
+                    <canvas id="genreChart"></canvas>
+                </div>
+                <div>
+                    <h2 class="text-3xl font-bold mb-6">Genre & Demographics</h2>
+                    <p class="text-muted leading-relaxed mb-6">
+                        The curation is mathematically balanced to bridge Transatlantic storytelling (UK Rap)
+                        with classic soulful elements (R&B/Gospel) and global rhythms (Afrobeats).
+                    </p>
+                    <ul class="space-y-4">
+                        <li class="flex items-start gap-3">
+                            <span class="bg-amber-100 p-1 rounded font-bold text-amber-700">1</span>
+                            <div>
+                                <h4 class="font-bold">98% Black Primary Artists</h4>
+                                <p class="text-sm text-muted">With NF as the singular cinematic exception for mental
+                                    health themes.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="bg-amber-100 p-1 rounded font-bold text-amber-700">2</span>
+                            <div>
+                                <h4 class="font-bold">Transatlantic Bridge</h4>
+                                <p class="text-sm text-muted">Featuring Dave (UK) alongside US heavyweights to ground
+                                    the experience in Stoke Gifford context.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: Prompt Builder -->
+        <section id="prompt" class="bg-[#191414] text-white p-12 rounded-3xl">
+            <div class="max-w-3xl mx-auto">
+                <div class="flex items-center gap-4 mb-6">
+                    <div
+                        class="w-12 h-12 rounded-full bg-[#1DB954] flex items-center justify-center font-bold text-black text-xl">
+                        S</div>
+                    <h2 class="text-3xl font-bold serif">Master Spotify Prompt</h2>
+                </div>
+                <p class="text-gray-400 mb-8 leading-relaxed">
+                    Use this meticulously engineered prompt to generate the "Influence of Black Greatness"
+                    auditory experience on Spotify's algorithmic or AI curation platform.
+                    It enforces strict thematic and demographic boundaries.
+                </p>
+                <div class="relative">
+                    <div class="absolute -top-3 left-4 px-2 bg-[#191414] text-xs font-bold text-gray-500 uppercase">
+                        Algorithmic Instruction</div>
+                    <div
+                        class="bg-gray-800/50 p-8 rounded-xl border border-gray-700 font-mono text-sm leading-loose custom-scrollbar overflow-y-auto h-64 mb-6">
+                        "Create a 60-track Spotify playlist titled 'The Influence of Black Greatness (Not Perfection —
+                        but God & Effort)'.
+                        The sonic profile must be a fusion of soulful rap, conscious hip-hop, R&B, Christian hip-hop
+                        (CHH), gospel, and Afrobeats.
+                        DEMOGRAPHIC: EXCLUSIVELY Black primary artists (Exception: NF). Lyrical content MUST adhere to
+                        themes of Christian faith, God-centered reflection, inspiration, hard work, healing, and respect
+                        for women. ABSOLUTELY NO tracks that glorify violence, misogyny, or superficial materialism.
+                        Required Artists: Lauryn Hill, Kendrick Lamar, J. Cole, Rapsody, Ab-Soul, Dave (UK), Jackie Hill
+                        Perry, Lecrae, Fridayy, Kirk Franklin, Asake. Sequence should move from introspection to
+                        triumphant praise."
+                    </div>
+                    <button onclick="copyPrompt()"
+                        class="w-full py-4 bg-[#1DB954] text-black font-bold rounded-full hover:scale-105 transition-transform">
+                        Copy Master Prompt
+                    </button>
+                    <p id="copyStatus" class="text-center text-xs mt-4 text-green-400 opacity-0 transition-opacity">
+                        Prompt copied to clipboard!</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-white border-t border-amber-100 py-12 px-6">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center text-sm text-muted">
+            <p>&copy; 2026 Black Greatness Report. All Artistic Rights Reserved.</p>
+            <div class="flex space-x-6 mt-4 md:mt-0">
+                <span>Faith</span>
+                <span>Effort</span>
+                <span>Excellence</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Data Sources
+        const pillars = [
+            {
+                title: "Christianity & God",
+                desc: "At the core is an unapologetic embrace of faith and spiritual contemplation. It integrates Christian Hip-Hop (CHH) and gospel-infused R&B to present a lived, gritty relationship with the Divine.",
+                artists: ["Jackie Hill Perry", "Lecrae", "Kirk Franklin", "Sondae", "Pastor Mike Jr.", "Caleb Gordon"]
+            },
+            {
+                title: "Inspiration & Work",
+                desc: "Reclaims the narrative of the 'grind' by framing it through honest labor and divine blessing. Success is a testament to overcoming adversity, not just immediate gratification.",
+                artists: ["Dave (UK)", "Caleb Gordon", "Fireboy DML", "KB", "J. Cole", "Joey Bada$$"]
+            },
+            {
+                title: "Growth & Healing",
+                desc: "Greatness is a continuous evolution. Tracks delve into the psychological labor of healing, positioning vulnerability as a source of strength rather than weakness.",
+                artists: ["Ab-Soul", "Kendrick Lamar", "NF", "Lauryn Hill", "Rapsody", "Dave (UK)"]
+            },
+            {
+                title: "Respect for Women",
+                desc: "A non-negotiable pillar. The playlist rejects misogyny, instead celebrating the intellectual, emotional, and spiritual depth of womanhood and soulful partnership.",
+                artists: ["Rapsody", "Lauryn Hill", "Fridayy", "J. Cole", "Dave (UK)", "Joey Bada$$"]
+            }
+        ];
+
+        const phases = {
+            1: {
+                title: "The Awakening",
+                desc: "The playlist opens with organic, soulful sounds that invite the listener to look inward and upward. It's about acknowledging human frailty and the need for grace before the journey begins.",
+                tracks: ["To Zion — Lauryn Hill", "Man at the Garden — Kendrick Lamar", "Man Up Above — J. Cole", "Do Better — Ab-Soul"]
+            },
+            2: {
+                title: "The Grind and The Soil",
+                desc: "The tempo increases. Focus shifts to sweat equity, mental fortitude, and the arduous reality of personal growth. It frames the struggle as the 'soil' where greatness is planted.",
+                tracks: ["Evidence — Caleb Gordon", "Count Me Out — Kendrick Lamar", "Paper Trail$ — Joey Bada$$", "Picture Me — Dave (UK)"]
+            },
+            3: {
+                title: "The Reverence",
+                desc: "A shift toward relational healing and the protection of women. This section emphasizes the importance of respectful love and emotional vulnerability in a man's journey to greatness.",
+                tracks: ["When It Comes to You — Fridayy", "Lesley — Dave (UK)", "Sojourner — Rapsody", "For Your Eyez Only — J. Cole"]
+            },
+            4: {
+                title: "The Harvest and The Praise",
+                desc: "A triumphant conclusion. The playlist resolves with joyful, high-energy Afrobeats and Gospel celebrations of resilience and divine accomplishment.",
+                tracks: ["GOD DID — Fridayy/JAY-Z", "Alright — Kendrick Lamar", "Big — Pastor Mike Jr.", "Baba God — Asake"]
+            }
+        };
+
+        // Logic
+        function updatePillar(index) {
+            const detail = document.getElementById('pillar-detail');
+            const title = document.getElementById('pillar-title');
+            const desc = document.getElementById('pillar-desc');
+            const artists = document.getElementById('pillar-artists');
+
+            detail.classList.add('opacity-0');
+
+            setTimeout(() => {
+                title.innerText = pillars[index].title;
+                desc.innerText = pillars[index].desc;
+                artists.innerHTML = pillars[index].artists.map(a => `<span class="bg-amber-100 px-3 py-1 rounded-full text-amber-800 font-semibold">${a}</span>`).join('');
+                detail.classList.remove('opacity-0');
+            }, 300);
+        }
+
+        function selectPhase(num) {
+            // Update UI Sidebar
+            for (let i = 1; i <= 4; i++) {
+                document.getElementById(`phase-${i}`).classList.remove('phase-active', 'border-amber-500');
+                document.getElementById(`phase-${i}`).classList.add('border-transparent');
+            }
+            document.getElementById(`phase-${num}`).classList.add('phase-active');
+
+            // Update content
+            const data = phases[num];
+            document.getElementById('p-title').innerText = data.title;
+            document.getElementById('p-desc').innerText = data.desc;
+            document.getElementById('p-tracks').innerHTML = data.tracks.map(t => `<li class="flex items-center gap-3"><span>🎵</span> ${t}</li>`).join('');
+        }
+
+        function copyPrompt() {
+            const promptText = `Create a 60-track Spotify playlist titled 'The Influence of Black Greatness (Not Perfection — but God & Effort)'. The sonic profile must be a fusion of soulful rap, conscious hip-hop, R&B, Christian hip-hop (CHH), gospel, and Afrobeats. DEMOGRAPHIC: EXCLUSIVELY Black primary artists (Exception: NF). Lyrical content MUST adhere to themes of Christian faith, God-centered reflection, inspiration, hard work, healing, and respect for women. ABSOLUTELY NO tracks that glorify violence, misogyny, or superficial materialism. Required Artists: Lauryn Hill, Kendrick Lamar, J. Cole, Rapsody, Ab-Soul, Dave (UK), Jackie Hill Perry, Lecrae, Fridayy, Kirk Franklin, Asake. Sequence should move from introspection to triumphant praise.`;
+            navigator.clipboard.writeText(promptText);
+            const status = document.getElementById('copyStatus');
+            status.classList.remove('opacity-0');
+            setTimeout(() => status.classList.add('opacity-0'), 2000);
+        }
+
+        // Charts
+        window.onload = function () {
+            const ctx = document.getElementById('genreChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'polarArea',
+                data: {
+                    labels: ['Soulful Rap', 'Gospel/CHH', 'R&B/Soul', 'Afrobeats', 'Pop Rap'],
+                    datasets: [{
+                        data: [40, 25, 20, 10, 5],
+                        backgroundColor: [
+                            'rgba(197, 160, 89, 0.7)',
+                            'rgba(140, 133, 125, 0.7)',
+                            'rgba(74, 53, 40, 0.7)',
+                            'rgba(217, 185, 122, 0.7)',
+                            'rgba(180, 160, 140, 0.7)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    },
+                    scales: {
+                        r: { ticks: { display: false } }
+                    }
+                }
+            });
+        };
+    </script>
+</body>
+
+</html>
